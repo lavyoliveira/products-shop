@@ -2,7 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shop/utils/constants.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+Future<void> loadEnv() async {
+  await dotenv.load(fileName: '.env');
+}
 
 class Product with ChangeNotifier {
   final String id;
@@ -31,7 +35,7 @@ class Product with ChangeNotifier {
       _toggleFavorite();
 
       final response = await http.patch(
-        Uri.parse('${Constants.productBaseUrl}/$id.json'),
+        Uri.parse('${dotenv.env['PRODUCTBASEURL']}/$id.json'),
         body: jsonEncode({"isFavorite": isFavorite}),
       );
 
