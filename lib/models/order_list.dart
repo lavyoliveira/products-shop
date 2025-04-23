@@ -4,7 +4,12 @@ import 'package:http/http.dart' as http;
 import 'package:shop/models/cart.dart';
 import 'package:shop/models/cart_item.dart';
 import 'package:shop/models/order.dart';
-import 'package:shop/utils/constants.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+
+Future<void> loadEnv() async {
+  await dotenv.load(fileName: '.env');
+}
 
 class OrderList with ChangeNotifier {
   final List<Order> _items = [];
@@ -21,7 +26,7 @@ class OrderList with ChangeNotifier {
     _items.clear();
 
     final response = await http.get(
-      Uri.parse('${Constants.orderBaseUrl}.json'),
+     Uri.parse('${dotenv.env['ORDERBASEURL']}.json'),
     );
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
@@ -50,7 +55,7 @@ class OrderList with ChangeNotifier {
     final date = DateTime.now();
 
     final response = await http.post(
-      Uri.parse('${Constants.orderBaseUrl}.json'),
+      Uri.parse('${dotenv.env['ORDERBASEURL']}.json'),
       body: jsonEncode(
         {
           'total': cart.totalAmount,
